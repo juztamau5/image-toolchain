@@ -65,7 +65,7 @@ RUN \
     cd $BUILD_BASE && \
     git clone https://github.com/crosstool-ng/crosstool-ng && \
     cd crosstool-ng && \
-    git checkout -b custom_version dd20ee5526b08baf97ca559e93d7546ec0746cfa && \
+    git checkout -b custom_version 36ad0b17a732aaffe4701d5d8d410d6e3e3abba9 && \
     ./bootstrap && \
     ./configure --prefix=/usr/local && \
     make && \
