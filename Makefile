@@ -17,20 +17,20 @@
 .PHONY: build push download clean checksum
 
 TOOLCHAIN_SUFFIX ?=
-TOOLCHAIN_TAG ?= devel$(TOOLCHAIN_SUFFIX)
+TOOLCHAIN_TAG ?= 0.15.1$(TOOLCHAIN_SUFFIX)
 TOOLCHAIN_CONFIG ?= configs/ct-ng-config$(TOOLCHAIN_SUFFIX)
 CONTAINER_BASE := /opt/cartesi/toolchain$(TOOLCHAIN_SUFFIX)
-KERNEL_VERSION ?= 5.15.63-ctsi-2
+KERNEL_VERSION ?= 6.1.33-ctsi-y
 KERNEL_SRCPATH := linux-$(KERNEL_VERSION).tar.gz
 
 BUILD_ARGS = --build-arg TOOLCHAIN_CONFIG=$(TOOLCHAIN_CONFIG) \
              --build-arg KERNEL_VERSION=$(KERNEL_VERSION)
 
 build: checksum
-	docker build -t cartesi/toolchain:${TOOLCHAIN_TAG} $(BUILD_ARGS) .
+	docker build -t juztamau5/toolchain:${TOOLCHAIN_TAG} $(BUILD_ARGS) .
 
 push:
-	docker push cartesi/toolchain:${TOOLCHAIN_TAG}
+	docker push juztamau5/toolchain:${TOOLCHAIN_TAG}
 
 run:
 	docker run --hostname toolchain-env -it --rm \
@@ -40,17 +40,17 @@ run:
 		-e GID=$$(id -g) \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
-		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
+		juztamau5/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
 run-as-root:
 	docker run --hostname toolchain-env -it --rm \
 		-v `pwd`:$(CONTAINER_BASE) \
 		-w $(CONTAINER_BASE) \
-		cartesi/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
+		juztamau5/toolchain:$(TOOLCHAIN_TAG) $(CONTAINER_COMMAND)
 
 # fetch the public cartesi linux sources if none was provided
 $(KERNEL_SRCPATH):
-	@wget -O $@ https://github.com/cartesi/linux/archive/v$(KERNEL_VERSION).tar.gz
+	@wget -O $@ https://github.com/juztamau5/linux/archive/6.1.33-ctsi-y.tar.gz
 
 shasumfile: $(KERNEL_SRCPATH)
 	@shasum -a 256 $^ > $@
